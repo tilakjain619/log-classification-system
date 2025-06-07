@@ -34,7 +34,10 @@ This project implements a hybrid log classification system, combining three comp
 3. **`resources/`**:
    - This folder contains resource files such as test CSV files, output files, images, etc.
 
-4. **Root Directory**:
+4. **`templates/`**:
+   - Contains the main HTML page (`index.html`) that renders a basic form for users to upload CSV files to the system.
+
+5. **Root Directory**:
    - Contains the FastAPI server code (`server.py`).
 
 ---
