@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Classification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #uploadForm {
+            background: #ffffff;
+            padding: 30px 40px;
+            border-radius: 15px;
+            border: 1px solid rgba(128, 128, 128, 0.27);
+            width: min(400px, 90%);
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+            text-align: center;
+        }
+
+        #uploadForm label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        #file {
+            margin-bottom: 20px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        button[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        #result{
+            margin: 4px 0;
+            margin-top: 7px;
+        }
+    </style>
+</head>
+<body>
+    <form id="uploadForm">
+        <h2>Classify Logs</h2>
+        <label for="file">Attach CSV File</label>
+        <input type="file" id="file">
+        <button type="submit">Classify</button>
+        <div id="result"></div>
+    </form>
+
+
+    <script>
+    document.getElementById("uploadForm").addEventListener("submit", async function(event) {
+        event.preventDefault();
+        document.getElementById("result").innerText = "Processing your request"
+        let formData = new FormData();
+        formData.append("file", document.getElementById("file").files[0]);
+
+        const response = await fetch("/api/classify", {
+            method: "POST",
+            body: formData
+        });
+        document.getElementById("result").innerText = "Please wait while file is downloading"
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "classified_results.csv";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    });
+</script>
+</body>
+</html>
